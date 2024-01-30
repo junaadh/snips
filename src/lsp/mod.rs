@@ -13,6 +13,7 @@ pub mod parser;
 pub mod reader;
 
 pub fn run(input: &[String]) {
+    let mut indicator = true;
     let language = &input[0].to_lowercase();
     let snippet_name = &input[1];
     let values = &input[2..];
@@ -26,9 +27,14 @@ pub fn run(input: &[String]) {
     for snippet in json_content {
         if snippet.name.eq_ignore_ascii_case(snippet_name) {
             print!("{}", format(snippet.body, values));
+            indicator = false;
         }
     }
-    process::exit(SnipError::SnipNotFound as i32);
+    if indicator {
+        process::exit(SnipError::SnipNotFound as i32);
+    } else {
+        process::exit(SnipError::SnipSuccess as i32);
+    }
 }
 
 pub fn help() {
